@@ -6,16 +6,11 @@ using UnityEngine.EventSystems;
 
 public class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    [SerializeField] Player.VECTOR vector;
-    [SerializeField] UnityEvent<int> OnMobileInput;
+    [SerializeField] VECTOR vector;
+    [SerializeField] UnityEvent<VECTOR> OnInputDown;
+    [SerializeField] UnityEvent<VECTOR> OnInputUp;
     
     bool isSelected = false;    // 누르는 중인가?
-
-    void Start()
-    {
-
-    }
-
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
@@ -24,13 +19,14 @@ public class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
     {
         isSelected = false;
+        OnInputUp?.Invoke(vector);
     }
     private void Update()
     {
         if (!isSelected)
             return;
 
-        OnMobileInput?.Invoke((int)vector);
+        OnInputDown?.Invoke(vector);
     }
 
 }

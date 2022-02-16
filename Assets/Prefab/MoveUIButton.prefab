@@ -93,7 +93,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
         m_MethodName: MobileInput
         m_Mode: 0
         m_Arguments:
