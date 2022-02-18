@@ -13,13 +13,11 @@ public class ShopItem : Button
     [SerializeField] Text ownedText;        // 보유 개수.
     [SerializeField] Text priceText;        // 가격.
 
-
     public void Setup()
     {
         OnDeselect();
     }
 
-    // event system의 current object에 등록되면 자동으로 호출.
     public override void OnSelect()
     {
         selectedImage.enabled = true;
@@ -28,7 +26,6 @@ public class ShopItem : Button
     {
         selectedImage.enabled = false;
     }
-
     public override void OnSubmit()
     {
 

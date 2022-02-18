@@ -9,7 +9,7 @@ public class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [SerializeField] VECTOR vector;
     [SerializeField] UnityEvent<VECTOR> OnInputDown;
     [SerializeField] UnityEvent<VECTOR> OnInputUp;
-    
+
     bool isSelected = false;    // 누르는 중인가?
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
@@ -21,6 +21,7 @@ public class UIButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         isSelected = false;
         OnInputUp?.Invoke(vector);
     }
+
     private void Update()
     {
         if (!isSelected)

@@ -13,12 +13,11 @@ public enum VECTOR
 
 public class Player : Singleton<Player>
 {
-
     readonly Vector2[] vectors = new Vector2[] {
-        Vector2.up,
-        Vector2.down,
-        Vector2.left,
-        Vector2.right,
+       Vector2.up,
+       Vector2.down,
+       Vector2.left,
+       Vector2.right
     };
 
     [SerializeField] float moveSpeed = 5f;
@@ -35,11 +34,11 @@ public class Player : Singleton<Player>
 
     public void SwitchControl(bool isUnlock)
     {
-        if(isUnlock)
+        if (isUnlock)
         {
             InputManager.Instance.OnInputDown += OnMovement;
             InputManager.Instance.OnSubmit += OnSubmit;
-            InputManager.Instance.OnCancel += OnCancel;
+            InputManager.Instance.OnCancel += OnCancel;            
         }
         else
         {
@@ -47,21 +46,12 @@ public class Player : Singleton<Player>
             InputManager.Instance.OnSubmit -= OnSubmit;
             InputManager.Instance.OnCancel -= OnCancel;
         }
-
-    }
-
-    private Collider2D RayToVector(VECTOR vector)
-    {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, vectors[(int)vector], 1f);
-        return hit.collider;
     }
 
     private void OnSubmit()
     {
         if (isMoving)
-        {
             return;
-        }
 
         Collider2D node = RayToVector(beforeInput);
         if (node == null)
@@ -69,17 +59,16 @@ public class Player : Singleton<Player>
 
         IInteraction target = node.GetComponent<IInteraction>();
         if (target != null)
-        {
             target.Interaction();
-        }
     }
+    private void OnCancel()
+    {
 
+    }
     private void OnMovement(VECTOR input)
     {
         if (isMoving)
-        {
             return;
-        }
 
         // 이전과 다른 방향으로 움직였으면 애니메이션 재생, 상호작용 UI닫기.
         if (input != beforeInput)
@@ -93,13 +82,7 @@ public class Player : Singleton<Player>
         // 이동 시작.
         StartCoroutine(Movement(input));
     }
-
-    private void OnCancel()
-    {
-
-    }
-
-    IEnumerator Movement(VECTOR vector)
+    private IEnumerator Movement(VECTOR vector)
     {
         // 도착지점을 계산 후 이동.
         if (RayToVector(vector) == null)
@@ -118,7 +101,7 @@ public class Player : Singleton<Player>
         }
 
         // 목적지 도착 이후 이동 방향으로 레이 발사.
-        Collider2D collider = RayToVector(vector); 
+        Collider2D collider = RayToVector(vector);
         if (collider != null)
         {
             IInteraction target = collider.GetComponent<IInteraction>();
@@ -132,6 +115,12 @@ public class Player : Singleton<Player>
 
         // 종료 후 이전 방향 대입.
         beforeInput = vector;
+    }
+
+    private Collider2D RayToVector(VECTOR vector)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, vectors[(int)vector], 1f);
+        return hit.collider;
     }
 }
 

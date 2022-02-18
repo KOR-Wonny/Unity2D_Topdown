@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-
 
 public interface IButtonHandler
 {
-    void OnSelect();                        // 선택 되었을 때.
-    void OnDeselect();                      // 비선택 되었을 때.
-    void OnSubmit();                        // 버튼을 눌렀을 때.
+    void OnSelect();            // 선택 되었을 때.
+    void OnDeselect();          // 비선택 되었을 때.
+    void OnSubmit();            // 버튼을 눌렀을 때.
     Button GetButtonOf(VECTOR v);
 }
 
@@ -23,7 +21,8 @@ public struct ButtonOf
 
 public abstract class Button : MonoBehaviour, IButtonHandler
 {
-    [SerializeField] protected ButtonOf buttons;
+    [SerializeField]
+    protected ButtonOf buttons;
 
     public void SetButtonOf(VECTOR v, Button button)
     {
@@ -32,15 +31,12 @@ public abstract class Button : MonoBehaviour, IButtonHandler
             case VECTOR.Up:
                 buttons.upButton = button;
                 break;
-
             case VECTOR.Down:
                 buttons.downButton = button;
                 break;
-
             case VECTOR.Left:
                 buttons.leftButton = button;
                 break;
-
             case VECTOR.Right:
                 buttons.rightButton = button;
                 break;
@@ -53,22 +49,17 @@ public abstract class Button : MonoBehaviour, IButtonHandler
         {
             case VECTOR.Up:
                 return buttons.upButton;
-
             case VECTOR.Down:
                 return buttons.downButton;
-
             case VECTOR.Left:
                 return buttons.leftButton;
-
             case VECTOR.Right:
                 return buttons.rightButton;
         }
 
         return null;
     }
-
     public abstract void OnDeselect();
-
     public abstract void OnSelect();
     public abstract void OnSubmit();
 }
@@ -80,12 +71,10 @@ public class SelectManager : MonoBehaviour
     protected virtual void SetButton(Button target)
     {
         if (target == null)
-        {
             return;
-        }
 
         // 최초에 버튼 세팅 시 이벤트 등록.
-        if (current == null)
+        if(current == null)
         {
             // 입력 매니저에게 자신의 이벤트 함수 등록.
             InputManager.Instance.OnInputUp += MoveButton;
@@ -103,7 +92,7 @@ public class SelectManager : MonoBehaviour
     }
     protected virtual void ClearButton()
     {
-        if (current != null)
+        if(current != null)
             current.OnDeselect();
 
         current = null;
@@ -113,27 +102,24 @@ public class SelectManager : MonoBehaviour
         InputManager.Instance.OnSubmit -= SubmitButton;
         InputManager.Instance.OnCancel -= CancelButton;
     }
+
     protected virtual void MoveButton(VECTOR v)
     {
         if (current == null)
-        {
             return;
-        }
 
         // vector에 해당하는 다음 버튼이 있다면
-        Button nextSelect = current.GetButtonOf(v);
-        if (nextSelect != null)
+        Button nextButton = current.GetButtonOf(v);
+        if(nextButton != null)
         {
             // 그것을 선택.
-            SetButton(nextSelect);
+            SetButton(nextButton);
         }
     }
     protected virtual void SubmitButton()
     {
         if (current == null)
-        {
             return;
-        }
 
         // 클릭.
         current.OnSubmit();

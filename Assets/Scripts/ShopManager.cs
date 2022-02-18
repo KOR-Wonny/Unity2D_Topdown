@@ -18,7 +18,7 @@ public class ShopManager : SelectManager
 
     private void Awake()
     {
-        instance = this;
+        instance = this;        
     }
     private void Start()
     {
@@ -28,8 +28,7 @@ public class ShopManager : SelectManager
     public void OpenShop()
     {
         panel.SetActive(true);
-        Player.Instance.SwitchControl(false);
-
+        
         // 10개의 아이템 생성.
         for (int i = 0; i<10; i++)
         {
@@ -42,7 +41,7 @@ public class ShopManager : SelectManager
 
         // shopItem끼리 서로의 방향에 따라 버튼을 대입.
         Button up = shopItemList[0];
-        for(int i = 0; i<shopItemList.Count; i++)
+        for(int i = 1; i<shopItemList.Count; i++)
         {
             Button down = shopItemList[i];
             up.SetButtonOf(VECTOR.Down, down);
@@ -52,47 +51,42 @@ public class ShopManager : SelectManager
         }
 
         // 플레이어의 입력 해제.
-        Player.Instance.SwitchControl(false);                   // 플레이어 입력 해제.
-        InputManager.Instance.OnCancel += CloseShop;            // 상점 닫기 이벤트 등록.
+        Player.Instance.SwitchControl(false);               // 플레이어 입력 해제.
+        InputManager.Instance.OnCancel += CloseShop;        // 상점 닫기 이벤트 등록.
+
+        SetButton(shopItemList[0]);
     }
-    
     public void CloseShop()
     {
-        InputManager.Instance.OnCancel -= CloseShop;            // 상점 닫기 이벤트 등록 해제.
-        Player.Instance.SwitchControl(true);                    // 플레이어 입력 재등록.
-        panel.SetActive(false);                                 // 패널 해제.
+        InputManager.Instance.OnCancel -= CloseShop;    // 상점 닫기 이벤트 등록 해제.
+        Player.Instance.SwitchControl(true);            // 플레이어 입력 재등록.
+        panel.SetActive(false);                         // 패널 해제.
 
-        // 버튼 선택 해제
+        // 버튼 선택 해제.
         ClearButton();
 
         // 생성했던 상점 아이템 목록 삭제.
-        for (int i = 0; i<shopItemList.Count;i++)
-        {
+        for (int i = 0; i<shopItemList.Count; i++)
             Destroy(shopItemList[i].gameObject);
-        }
 
-        // 리스트 Clear
-        shopItemList.Clear();
-
+        // 리스트 Clear.
+        shopItemList.Clear();                
     }
 
     protected override void MoveButton(VECTOR v)
     {
         base.MoveButton(v);
 
-        // 상점 목록의 높이 갱신
-        Debug.Log("ViewPort의 높이 : " + scrollView.rect.height);
-        Debug.Log("선택 목록의 y축 높이 : " + current.transform.localPosition.y);
-
+        // 상점 목록의 높이 갱신.
         float viewHeight = scrollView.rect.height;
         float currentY = current.transform.localPosition.y;
+        float currentHeight = current.GetComponent<RectTransform>().rect.height;
 
-        float contentY = currentY - viewHeight;             // content의 y축 높이
+        float contentY = Mathf.Abs(currentY) - viewHeight + currentHeight;   // content의 y축 높이.
 
-        // 컨텐츠의 높이 중 y축의 값을 변경 후 대입
+        // 컨텐츠의 높이 중 y축의 값을 변경 후 대입.
         Vector3 localPosition = content.transform.localPosition;
-        localPosition.y = currentY;
+        localPosition.y = contentY;
         content.transform.localPosition = localPosition;
     }
-
 }
